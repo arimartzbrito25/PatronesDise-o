@@ -22,4 +22,4 @@ class BoletoVIP(Boleto):
 
 class BoletoEstudiante(Boleto):
     def calcular_precio(self):
-        return self.precio_base * 0.5
+        return self.precio_base * 0.8
