@@ -16,5 +16,6 @@ from pagos.pagable import Pagable
 class PagoTarjeta(Pagable):
     """Simula una conexión bancaria y confirma el cobro procesado."""
 
-    def procesar_pago(self, monto: float) -> None:
-        print(f"[TARJETA]  Pago con tarjeta procesado: ${monto:.2f}")
+    def procesar_pago(self, monto: float, cliente: str = "") -> None:
+        destinatario = f" a {cliente}" if cliente else ""
+        print(f"  [TARJETA]  Cobrando ${monto:.2f}{destinatario}")

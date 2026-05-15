@@ -15,9 +15,10 @@ from abc import ABC, abstractmethod
 class Pagable(ABC):
     """
     Interfaz de pago.
-    Obliga a cada implementación a definir procesar_pago(monto).
+    Obliga a cada implementación a definir procesar_pago(monto, cliente).
+    cliente es opcional para mantener compatibilidad (LSP).
     """
 
     @abstractmethod
-    def procesar_pago(self, monto: float) -> None:
+    def procesar_pago(self, monto: float, cliente: str = "") -> None:
         """Procesa el cobro del monto indicado."""

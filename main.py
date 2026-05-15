@@ -3,7 +3,7 @@ main.py
 ───────
 Punto de entrada del sistema de reservas de cine.
 
-Responsabilidad: orquestar objetos e imprimir resultados.
+Responsabilidad: componer objetos y mostrar resultados.
 No contiene lógica de negocio — solo composición y presentación.
 (SRP: la presentación vive aquí, no dentro de Reserva)
 """
@@ -11,36 +11,40 @@ No contiene lógica de negocio — solo composición y presentación.
 import sys
 import os
 
-# Asegura que la raíz del proyecto esté en el path para que
-# los imports absolutos funcionen sin instalar el paquete.
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from boletos import BoletoGeneral, BoletoVIP, BoletoEstudiante
 from pagos import PagoEfectivo, PagoTarjeta
+from servicios import ServicioDb, ServicioEmail
 from reserva import Reserva
 
 
 def main() -> None:
-    # ── Construir reserva ────────────────────────────────────────
-    reserva = Reserva()
-    reserva.agregar_boleto(BoletoGeneral("Dune", 5.00))
-    reserva.agregar_boleto(BoletoVIP("Dune", 5.00))
-    reserva.agregar_boleto(BoletoEstudiante("Dune", 5.00))
 
-    # ── Presentación (responsabilidad del cliente, no de Reserva) ─
-    for linea in reserva.detalle_boletos():
-        print(linea)
+    # ── Reserva 1: Ana Garcia — 2 boletos VIP, pago con tarjeta ──
+    reserva_ana = Reserva(cliente="Ana Garcia")
+    reserva_ana.agregar_boleto(BoletoVIP("Dune", 75.00))
+    reserva_ana.agregar_boleto(BoletoVIP("Dune", 75.00))
+    reserva_ana.agregar_servicio(ServicioDb())
+    reserva_ana.agregar_servicio(ServicioEmail())
 
-    print(f"Total: ${reserva.calcular_total_reserva():.2f}")
-
-    # ── Pago con tarjeta ─────────────────────────────────────────
-    reserva.realizar_pago(PagoTarjeta())
+    descripcion_ana = "VIP x2 -- Ana Garcia"
+    print(descripcion_ana)
+    reserva_ana.realizar_pago(PagoTarjeta())
 
     print()
 
-    # ── Demostración de intercambiabilidad (DIP / polimorfismo) ───
-    print("--- Mismo total, método de pago diferente ---")
-    reserva.realizar_pago(PagoEfectivo())
+    # ── Reserva 2: Luis Perez — 3 boletos Estudiante, pago efectivo
+    reserva_luis = Reserva(cliente="Luis Perez")
+    reserva_luis.agregar_boleto(BoletoEstudiante("Dune", 25.00))
+    reserva_luis.agregar_boleto(BoletoEstudiante("Dune", 25.00))
+    reserva_luis.agregar_boleto(BoletoEstudiante("Dune", 25.00))
+    reserva_luis.agregar_servicio(ServicioDb())
+    reserva_luis.agregar_servicio(ServicioEmail())
+
+    descripcion_luis = "Estudiante x3 -- Luis Perez"
+    print(descripcion_luis)
+    reserva_luis.realizar_pago(PagoEfectivo())
 
 
 if __name__ == "__main__":

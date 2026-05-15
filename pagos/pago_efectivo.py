@@ -16,5 +16,6 @@ from pagos.pagable import Pagable
 class PagoEfectivo(Pagable):
     """Confirma la recepción de dinero en efectivo."""
 
-    def procesar_pago(self, monto: float) -> None:
-        print(f"[EFECTIVO] Pago en efectivo recibido: ${monto:.2f}")
+    def procesar_pago(self, monto: float, cliente: str = "") -> None:
+        origen = f" de {cliente}" if cliente else ""
+        print(f"  [EFECTIVO] Recibiendo ${monto:.2f}{origen}")
